@@ -63,5 +63,6 @@ nav:
       - 0003 Ring-based syscalls: adr/0003-ring-based-syscall-interface.md
       - 0004 No native kernel modules: adr/0004-no-native-kernel-modules.md
   - RFC process: rfcs/README.md
+  - Diagrams: diagrams/README.md
   - Glossary: glossary.md
   - FAQ: faq.md

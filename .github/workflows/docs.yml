@@ -28,7 +28,9 @@ jobs:
         with:
           python-version: "3.x"
       - run: pip install mkdocs-material
-      - run: mkdocs build --strict
+      # Not --strict: external/repo-root links and intentional doc stubs would
+      # otherwise fail the build. Link rot is caught separately by link-check.yml.
+      - run: mkdocs build
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site

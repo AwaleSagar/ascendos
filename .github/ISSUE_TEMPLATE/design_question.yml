@@ -1,0 +1,28 @@
+name: Design question or doubt
+description: Question, doubt, or perceived flaw in the architecture or a decision.
+labels: ["design", "discussion"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is the most welcome kind of issue. Disagreement with reasoning
+        attached is more useful than agreement.
+  - type: textarea
+    id: concern
+    attributes:
+      label: What's the question or concern?
+      description: Be specific. Point at the page, ADR, or section.
+      placeholder: "ADR-0003 assumes ... but what about ...?"
+    validations:
+      required: true
+  - type: textarea
+    id: reasoning
+    attributes:
+      label: Why does this matter / what's your reasoning?
+    validations:
+      required: true
+  - type: input
+    id: refs
+    attributes:
+      label: Relevant page or ADR
+      placeholder: "docs/adr/0003-ring-based-syscall-interface.md"

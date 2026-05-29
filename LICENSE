@@ -1,0 +1,29 @@
+AscendOS — Licensing
+====================
+
+This repository currently contains design documentation only (no source code).
+
+Documentation and design content
+--------------------------------
+All documentation, diagrams, and design content in this repository are licensed
+under the Creative Commons Attribution 4.0 International License (CC BY 4.0).
+
+You are free to share and adapt the material for any purpose, including
+commercially, provided you give appropriate credit.
+
+Full text: https://creativecommons.org/licenses/by/4.0/legalcode
+
+Future source code
+------------------
+When source code is added, it is intended to be dual-licensed under your choice
+of:
+
+    MIT OR Apache-2.0
+
+This is the prevailing convention in the systems/Rust community: MIT for
+simplicity, Apache-2.0 for its explicit patent grant. The intent is stated here
+in advance so that contributors understand the terms before any code exists.
+This section is informational until the first code lands, at which point the
+relevant LICENSE-MIT and LICENSE-APACHE files will be added.
+
+SPDX-License-Identifier: CC-BY-4.0

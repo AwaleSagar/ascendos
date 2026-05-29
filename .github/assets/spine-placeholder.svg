@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="360" viewBox="0 0 760 360" font-family="ui-monospace, monospace">
+  <rect width="760" height="360" fill="#1b1d21"/>
+  <g text-anchor="middle">
+    <rect x="40" y="24"  width="680" height="44" rx="4" fill="#3E63DD"/>
+    <text x="380" y="52" fill="#fff" font-size="15">Band 5 — Operator surface (CLI: ash, pkg, trace)</text>
+    <rect x="40" y="76"  width="680" height="44" rx="4" fill="#5274e0"/>
+    <text x="380" y="104" fill="#fff" font-size="15">Band 4 — System services (svcd, vfsd, netstackd, secd)</text>
+    <rect x="40" y="128" width="680" height="44" rx="4" fill="#6f8be6"/>
+    <text x="380" y="156" fill="#fff" font-size="15">Band 3 — User-space drivers &amp; runtime (confined)</text>
+    <line x1="40" y1="186" x2="720" y2="186" stroke="#FFB224" stroke-width="4" stroke-dasharray="2 0"/>
+    <text x="380" y="182" fill="#FFB224" font-size="12">— kernel / user boundary  (EL1 | EL0) —</text>
+    <rect x="40" y="196" width="680" height="48" rx="4" fill="#E5484D"/>
+    <text x="380" y="225" fill="#fff" font-size="15">Band 2 — Microkernel (EL1): sched · mem · IPC · caps · IRQ</text>
+    <rect x="40" y="252" width="680" height="44" rx="4" fill="#2B2D31" stroke="#54565c"/>
+    <text x="380" y="280" fill="#cfd2d8" font-size="15">Band 1 — HAL &amp; boot (EL3/EL2): GIC · SMMU · MTE/PAC</text>
+    <text x="380" y="328" fill="#7b7f88" font-size="12">AscendOS — five-band architecture (placeholder; see blueprint for detail)</text>
+  </g>
+</svg>

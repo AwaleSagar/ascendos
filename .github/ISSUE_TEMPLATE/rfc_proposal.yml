@@ -1,0 +1,28 @@
+name: RFC proposal (intent)
+description: Signal intent to propose a substantive design change. The full RFC goes in docs/rfcs/.
+labels: ["rfc"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this to float a significant design change before writing the full
+        RFC. The actual RFC is a pull request adding a document under
+        `docs/rfcs/` — see the [RFC process](https://github.com/AwaleSagar/ascendos/blob/main/docs/rfcs/README.md).
+  - type: textarea
+    id: summary
+    attributes:
+      label: One-paragraph summary of the proposed change
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: What problem does it solve? What's wrong with the status quo?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you've considered
+    validations:
+      required: true

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Discussion / open-ended design talk
+    url: https://github.com/AwaleSagar/ascendos/discussions
+    about: For questions and exploratory design conversations that aren't a concrete issue yet.
+  - name: RFC process
+    url: https://github.com/AwaleSagar/ascendos/blob/main/docs/rfcs/README.md
+    about: For proposing a substantive change to the architecture.

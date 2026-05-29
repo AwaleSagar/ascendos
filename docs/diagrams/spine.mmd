@@ -1,0 +1,8 @@
+flowchart TB
+    B5["Band 5 — Operator surface (CLI: ash, pkg, trace)"]
+    B4["Band 4 — System services (svcd, vfsd, netstackd, secd, ...)"]
+    B3["Band 3 — User-space drivers & runtime (confined)"]
+    K["=== kernel / user boundary (EL1 | EL0) ==="]
+    B2["Band 2 — Microkernel (EL1): sched, mem, IPC, caps, IRQ"]
+    B1["Band 1 — HAL & boot (EL3/EL2 firmware): GIC, SMMU, MTE/PAC"]
+    B5 --> B4 --> B3 --> K --> B2 --> B1

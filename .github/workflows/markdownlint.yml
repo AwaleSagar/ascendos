@@ -17,5 +17,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-      # Run cli2 directly; it reads globs and ignores from .markdownlint-cli2.yaml.
-      - run: npx --yes markdownlint-cli2
+      # Install then run cli2 directly; it reads globs and ignores from
+      # .markdownlint-cli2.yaml.
+      - run: npm install -g markdownlint-cli2
+      - run: markdownlint-cli2

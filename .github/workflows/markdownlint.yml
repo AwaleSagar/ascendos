@@ -18,7 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # The action reads rules, globs, and ignores from .markdownlint-cli2.yaml.
+      # The action reads rules and ignores from .markdownlint-cli2.yaml; the
+      # globs input below selects which files to lint.
       - uses: DavidAnson/markdownlint-cli2-action@v19
         with:
-          globs: ""
+          globs: "**/*.md"

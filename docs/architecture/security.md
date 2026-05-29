@@ -41,6 +41,26 @@ Net: MTE stays in the design as one layer, but the real memory-safety story is
 the kernel language and the isolation model (capabilities, SMMU, user-space
 drivers). MTE is the belt, not the trousers.
 
+## CCA/RME hardware availability
+
+ARM Confidential Compute Architecture (CCA) and the Realm Management Extension
+(RME) are first-class in the design, but the hardware reality in 2026 is thin:
+
+- **No widely shipping CCA silicon exists yet.** ARM has announced RME in
+  ARMv9.2-A; reference implementations exist in FVP (Fixed Virtual Platform)
+  models, but production silicon with RME enabled is limited to early server
+  reference platforms. No consumer SoC ships RME today.
+- **The optional design is correct.** Marking `realmd` and EL2 usage as optional
+  is the right call — AscendOS must boot and be useful on hardware without CCA.
+- **Migration path.** When CCA silicon arrives, the capability model already
+  provides the isolation primitives (`RealmCap` objects). The gap is in EL2 setup
+  and RMI (Realm Management Interface) plumbing, which is entirely in `realmd`
+  and doesn't affect the core kernel.
+
+Net: CCA stays as an architectural target, not a boot requirement. The design
+should not depend on RME features for any security property that matters on
+current hardware.
+
 ## A note on threat model
 
 We don't yet have a written threat model, and we should. What's an attacker

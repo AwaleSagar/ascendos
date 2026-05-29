@@ -33,3 +33,14 @@ the design's central performance bet and is documented as
 in need of critique.**
 
 Full detail: blueprint §6.
+
+## Sources
+
+- seL4 IPC fastpath: "Correct, Fast, Maintainable — Choose Any Three!"
+  (Trustworthy Systems, UNSW).
+- seL4 whitepaper: IPC performance on ARM
+  (<https://sel4.systems/About/seL4-whitepaper.pdf>).
+- io_uring(7) manual page — shared ring buffer design
+  (<https://man7.org/linux/man-pages/man7/io_uring.7.html>).
+- ARM Architecture Reference Manual (ARM DDI 0487): AArch64 memory ordering,
+    STLR/LDAR acquire-release semantics.

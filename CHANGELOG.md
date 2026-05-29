@@ -25,6 +25,14 @@ pre-1.0 and the design may change without notice.
 - Strengthened ADR-0003 with real io_uring CVEs, the Google/Android/ChromeOS
   disable history, the verifiability-vs-rings conflict, and a validation path.
 - Documented the capability-revocation vs. real-time tension in scheduling.
+- Added ARM memory-ordering analysis to ADR-0003 (STLR/LDAR, per-entry cost on
+  Cortex-A76, io_uring ordering bug history).
+- Added CCA/RME hardware availability note to security (no shipping silicon in
+  2026, design stays optional).
+- Added TCB size context to microkernel page (seL4 comparison, ring interface
+  tension against 15 KLOC target).
+- Added source citations to capabilities, IPC, and memory pages (seL4 manuals,
+  ARM Architecture Reference Manual, io_uring manpage).
 
 Nothing is released yet. This section will be split into versioned entries once
 there is something to version.

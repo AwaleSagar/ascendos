@@ -25,6 +25,12 @@ pre-1.0 and the design may change without notice.
 - Strengthened ADR-0003 with real io_uring CVEs, the Google/Android/ChromeOS
   disable history, the verifiability-vs-rings conflict, and a validation path.
 - Documented the capability-revocation vs. real-time tension in scheduling.
+- Comprehensive per-subsystem validation pass (`docs/validation/`): added a
+  sourced IPC baseline (~986 cycles, seL4 fastpath); qualified 52-bit VA as
+  requiring FEAT_LPA2 and specified ASID width; corrected "QUIC-ready L4" (QUIC
+  runs over UDP) and added smoltcp/ixy.rs precedent; added a storage reality
+  check (defer novel CoW; use A/B + dm-verity early); specified SMMU stage-1 /
+  StreamID and GICv3 / ITS / LPI as the driver-isolation hardware baseline.
 
 Nothing is released yet. This section will be split into versioned entries once
 there is something to version.

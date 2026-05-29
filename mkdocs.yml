@@ -65,6 +65,7 @@ nav:
   - RFC process: rfcs/README.md
   - Validation:
       - 2026-05 external review: validation/2026-05-external-review.md
+      - 2026-05 comprehensive pass: validation/2026-05-comprehensive-pass.md
   - Diagrams: diagrams/README.md
   - Glossary: glossary.md
   - FAQ: faq.md

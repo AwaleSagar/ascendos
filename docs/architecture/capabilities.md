@@ -46,3 +46,12 @@ answerable by listing its CSpace. Revocation is recursive and precise. There is
 no `setuid`, no global filesystem permission to get wrong.
 
 Full detail: blueprint §5.
+
+## Sources
+
+- seL4 Reference Manual (latest): CSpace, untyped memory, capability operations
+  (<https://sel4.systems/Info/Docs/seL4-manual-latest.pdf>).
+- "The seL4 Capability System" — Cambridge security group overview
+  (<https://www.cl.cam.ac.uk/research/security/ctsrd/cheri/workshops/pdfs/20160423-sel4-capabilities.pdf>).
+- seL4 formal specification (Isabelle/HOL) — verified capability invariants
+  (<https://sel4.systems/Info/Docs/seL4-spec.pdf>).

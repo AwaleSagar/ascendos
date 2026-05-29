@@ -54,6 +54,10 @@ haven't checked.
 | io_uring security record understated | Added real CVEs and the Google/Android/ChromeOS disable history; sharpened the verifiability-vs-rings conflict; added an explicit validation path | [ADR-0003](../adr/0003-ring-based-syscall-interface.md) |
 | Capability revocation cost vs. real-time claim (missed by the review) | Documented the tension explicitly, citing RTSS 2025 work on bounding revocation cost | [scheduling.md](../architecture/scheduling.md) |
 | "EEVDF-style" too vague | Noted what the eventual scheduler ADR must pin down | [scheduling.md](../architecture/scheduling.md), issue #3 |
+| ARM memory ordering for rings unaddressed | Added STLR/LDAR analysis, per-entry cost on Cortex-A76, io_uring ordering bug history | [ADR-0003](../adr/0003-ring-based-syscall-interface.md) |
+| CCA/RME hardware availability not discussed | Added availability note — no shipping silicon in 2026, design stays optional | [security.md](../architecture/security.md) |
+| TCB 15 KLOC target lacks seL4 comparison | Added seL4 size context (8.7K–12.1K SLOC) and ring interface tension | [microkernel.md](../architecture/microkernel.md) |
+| Architecture pages lack primary source citations | Added seL4 manuals, ARM ARM, io_uring manpage to capabilities, IPC, memory pages | [capabilities.md](../architecture/capabilities.md), [ipc.md](../architecture/ipc.md), [memory.md](../architecture/memory.md) |
 
 ## Risks the review missed
 

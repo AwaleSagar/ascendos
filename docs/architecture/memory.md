@@ -36,9 +36,16 @@ The blueprint says "optional 52-bit VA"; the precise constraint matters:
 
 ## Sources
 
+- seL4 Reference Manual: untyped memory and retype operations
+  (<https://sel4.systems/Info/Docs/seL4-manual-latest.pdf>).
 - `TCR_EL1` (ASID size `AS`, `FEAT_LPA2` for 52-bit) — Arm Architecture
   Reference / Arm Developer register docs.
 - ARM64 page-table and ASID-tagged TLB behaviour — Linux Kernel Internals,
   "ARM64 Page Tables".
+- ARM Architecture Reference Manual (ARM DDI 0487): MTE (Memory Tagging
+  Extension), PAC (Pointer Authentication), BTI (Branch Target Identification).
+- ARM developer guide: "Providing protection for complex software" (MTE/PAC/BTI
+  overview)
+  (<https://developer.arm.com/-/media/Arm%20Developer%20Community/PDF/Learn%20the%20Architecture/Providing%20protection%20for%20complex%20software.pdf>).
 
 Full detail: blueprint §4.1.

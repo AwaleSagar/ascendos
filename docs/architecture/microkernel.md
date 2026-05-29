@@ -4,6 +4,13 @@ Everything in this page runs at EL1 and is the entire trusted computing base.
 The target is **≤ 15 KLOC**. If a feature can live in user space, it does not
 belong here.
 
+**TCB size context.** seL4's verified kernel is ~8,700 SLOC C + 600 asm (SOSP
+2009) on ARM, growing to ~10,000–12,100 SLOC depending on architecture (seL4
+FAQ). Our 15 KLOC target is above seL4's verified size — achievable with
+discipline, but the ring interface ([ADR-0003](../adr/0003-ring-based-syscall-interface.md))
+adds complexity that works against it. The kernel should be profiled by SLOC at
+each milestone to keep this honest.
+
 ```mermaid
 flowchart TB
     ENTRY["Trap & ring dispatch"] --> CAP["Capability engine"]

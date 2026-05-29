@@ -91,6 +91,41 @@ If the prototype shows the throughput win is small, or the verification cost is
 large, the right move is to supersede this ADR with the trap-based alternative.
 We would rather ship a slower kernel we can trust than a faster one we can't.
 
+## ARM memory-ordering considerations
+
+Validation gate 2 requires a written memory-ordering spec before this ADR is
+final. This section sketches the problem space so reviewers can evaluate whether
+it's tractable.
+
+ARM's memory model is weaker than x86-TSO. Stores can be observed out of order
+by other observers, and loads can be satisfied from the store buffer. For a
+shared-memory ring where user space writes and the kernel reads (and vice versa),
+this means:
+
+- **Ring head/tail updates must use `STLR`/`LDAR` (acquire-release) pairs,** not
+  plain loads and stores. On ARMv8-A, `STLR` (store-release) ensures prior writes
+  are visible before the store becomes visible; `LDAR` (load-acquire) ensures
+  subsequent reads see state at least as new as the load.
+- **The submission ring (user→kernel):** user space does a `STLR` on the tail
+  after writing entries; the kernel does `LDAR` on the tail before reading them.
+  Entry fields themselves need no additional ordering if the tail update is the
+  release point — but this must be *proved*, not assumed.
+- **The completion ring (kernel→user):** kernel does `STLR` on the head; user
+  space does `LDAR` on the head.
+- **Cost:** `STLR`/`LDAR` on Cortex-A76 (Pi 5's core) costs roughly 4–8 cycles
+  vs. 1 cycle for plain LDR/STR. On smaller cores (A55-class), the penalty can
+  be higher. This is the per-entry overhead of the ring interface on ARM.
+- **io_uring's own ordering bugs** (fixed in Linux 5.x–6.x) are a cautionary
+  tale: the kernel's `smp_store_release` / `smp_load_acquire` wrappers exist
+  because plain accesses *were* used in early versions, causing subtle races on
+  ARM.
+
+The full spec must also address: DMB barriers for DMA-coherent ring memory,
+SMMU-backed mappings, and whether ring memory is Inner-Shareable or
+Outer-Shareable (affects barrier choice and performance). These are not blocking
+unknowns — they are well-understood ARM territory — but they add lines of code to
+the TCB.
+
 ## Alternatives considered
 
 - **Pure trap-per-syscall (classic seL4-style).** Strongly considered. Smaller,

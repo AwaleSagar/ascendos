@@ -51,8 +51,14 @@ measurement on real ARM hardware before the decision is treated as settled.
 ## Sources
 
 - seL4 fastpath optimisation: "Correct, Fast, Maintainable — Choose Any Three!"
-  (Trustworthy Systems / APSys).
+  (Trustworthy Systems / UNSW).
 - Round-trip cycle figures: "Fast, Secure, Adaptable: LionsOS…" (arXiv
   2501.06234).
+- seL4 whitepaper: IPC performance on ARM
+  (<https://sel4.systems/About/seL4-whitepaper.pdf>).
+- io_uring(7) manual page — shared ring buffer design
+  (<https://man7.org/linux/man-pages/man7/io_uring.7.html>).
+- ARM Architecture Reference Manual (ARM DDI 0487): AArch64 memory ordering,
+  STLR/LDAR acquire-release semantics.
 
 Full detail: blueprint §6.

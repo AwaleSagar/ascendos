@@ -7,6 +7,7 @@ pre-1.0 and the design may change without notice.
 ## [Unreleased]
 
 ### Added
+
 - Initial architecture blueprint for the AscendOS ARM64 microkernel.
 - Documentation scaffold (overview, architecture, ADRs, RFC process).
 - Seed decision records ADR-0001 through ADR-0004.

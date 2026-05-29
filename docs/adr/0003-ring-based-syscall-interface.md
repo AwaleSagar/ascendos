@@ -41,10 +41,17 @@ control path but not the data path.
   ARM's weak model, and wakeup/doorbell logic are subtle and easy to get wrong.
   This adds to the TCB we're trying to keep small — a real tension with
   [ADR-0001](0001-pure-capability-model.md)'s verifiability goal.
-- **Security surface.** Shared-memory interfaces between privilege domains have
-  had real vulnerabilities (io_uring itself has a notable CVE history). Every
-  field the kernel reads from a user-writable ring is an attack surface that must
-  be validated carefully (TOCTOU).
+- **Security surface — and io_uring's record here is genuinely alarming.**
+  Shared-memory interfaces between privilege domains have a bad track record.
+  io_uring specifically: CVE-2021-3491 (heap overflow → RCE), CVE-2023-1872
+  (use-after-free → local privilege escalation), CVE-2023-2598, among others.
+  Google reported that **~60% of kernel exploits submitted to its 2022 bug
+  bounty targeted io_uring**, and as a result io_uring was *disabled* for apps on
+  Android, disabled entirely on ChromeOS, and restricted on Google's production
+  servers. We are adopting the interface pattern that one of the largest Linux
+  operators decided to switch off. Every field the kernel reads from a
+  user-writable ring is an attack surface that must be validated carefully
+  (TOCTOU: validate-then-copy, never trust-in-place).
 - **Capability checks still cost something.** The ring removes the trap, not the
   authorization check; we must ensure the check is cheap without being unsafe.
 
@@ -56,7 +63,33 @@ easier to verify, at the cost of throughput we haven't measured because nothing
 runs yet. If the complexity/security cost outweighs the (unmeasured) performance
 benefit, this ADR should be superseded.
 
+There's a sharper version of the tension worth stating plainly: the whole pitch
+of this project is a **small, verifiable TCB** ([ADR-0001](0001-pure-capability-model.md)).
+A user-writable ring that the kernel reads, with weak-memory ordering and TOCTOU
+hazards, is precisely the kind of code that is *hard to verify* and historically
+*easy to get wrong*. So this decision may not just be a performance trade-off —
+it may be in direct conflict with the project's reason to exist. That's why it's
+the loudest open question we have.
+
 **If you read one thing in this repo and disagree with it, make it this.**
+
+## Validation path (before this becomes load-bearing)
+
+This ADR is "accepted" only as the working assumption, not as a settled fact. It
+should not be treated as final until:
+
+1. **A prototype exists** of both the ring path and a plain trap-per-syscall
+   path, measured for IPC/round-trip throughput and latency on a named target
+   SoC — not on x86, where the memory model flatters the design.
+2. **A written memory-ordering specification** says which acquire/release
+   barriers go where on the ARM weak model, and what they cost. (io_uring has
+   itself shipped ordering bugs; we don't get to wave this away.)
+3. **A TOCTOU-safe access discipline** for ring fields is specified and, ideally,
+   shown to be amenable to the verification approach we choose.
+
+If the prototype shows the throughput win is small, or the verification cost is
+large, the right move is to supersede this ADR with the trap-based alternative.
+We would rather ship a slower kernel we can trust than a faster one we can't.
 
 ## Alternatives considered
 
@@ -69,3 +102,14 @@ benefit, this ADR should be superseded.
   way to provide it.
 - **Asynchronous message queues without shared-memory rings.** Rejected: doesn't
   eliminate the per-message trap cost that motivated this decision.
+
+## Sources
+
+- io_uring(7) manual page (man7.org) — ring buffer design and rationale.
+- io_uring CVEs: CVE-2021-3491, CVE-2023-1872 (NVD), CVE-2023-2598.
+- "io_uring: Linux Performance Boost or Security Headache?" (Upwind) and the
+  2024 HN discussion on io_uring being disabled across Android / ChromeOS /
+  Google servers — the ~60% bug-bounty figure.
+- seL4 IPC fastpath case study: "Correct, Fast, Maintainable — Choose Any
+  Three!" (Trustworthy Systems) for the trap-based baseline this is measured
+  against.

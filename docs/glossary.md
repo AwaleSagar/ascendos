@@ -32,5 +32,11 @@ Terms used throughout the AscendOS docs.
   device DMA to granted memory.
 - **TCB** — Trusted Computing Base; the code that must be correct for the
   security of the system to hold. AscendOS aims to keep it ≤ 15 KLOC.
+- **TIKTAG** — a 2025 speculative-execution attack (IEEE S&P) that leaks ARM MTE
+  tags, undermining MTE's protection in practice. Why we treat MTE as
+  defense-in-depth, not a guarantee.
+- **TOCTOU** — Time-Of-Check to Time-Of-Use; a class of bug where a value is
+  validated then changed before use. A core hazard for kernel-read,
+  user-writable ring buffers (see ADR-0003).
 - **Untyped** — a capability to raw physical memory, from which typed kernel
   objects are created by *retyping*.

@@ -28,8 +28,23 @@ flowchart LR
 | S7 svcd | EL0 | Dependency-ordered parallel service launch | — |
 | S8 ash | EL0 | Operator login | — |
 
-**Cold-boot target:** power-on → shell prompt in **< 250 ms** on a reference
-SoC. *(Target, not a measurement — nothing boots yet.)*
+**Boot targets.** The original single "< 250 ms power-on → shell" figure
+doesn't survive contact with reality, so we split it:
+
+- **AscendOS-owned path (S5 → S8), kernel init to shell: < 250 ms.** This is the
+  part we control and the number that actually measures our design. A small
+  microkernel's init (S5) is sub-millisecond for modest configurations; the
+  budget here is dominated by `svcd` and service bring-up.
+- **Full power-on path (S0 → S8): platform-dependent, target ≤ 1 s on a named
+  reference SoC.** The firmware stages (S0–S4) are mostly *not* ours, and they
+  dominate. DRAM training alone ranges from ~1–2 ms on a tightly-controlled
+  embedded SoC (e.g. Xilinx Zynq, per UG585) to seconds on general-purpose
+  platforms; stock ARM firmware (TF-A BL1/BL2/BL31) routinely adds hundreds of
+  milliseconds. Quoting a sub-250 ms *power-on* number without pinning the SoC
+  and firmware would be dishonest.
+
+*(All targets, not measurements — nothing boots yet. The reference SoC is still
+undefined; see open questions.)*
 
 ## Open questions
 
@@ -38,5 +53,7 @@ SoC. *(Target, not a measurement — nothing boots yet.)*
   control.
 - Where exactly does the DICE CDI derivation happen on boards without a
   hardware root of trust?
+- **Which reference SoC?** Every boot number above is meaningless until we name
+  it and its firmware. Picking one is a Phase 1 task.
 
 Full detail: blueprint §3.

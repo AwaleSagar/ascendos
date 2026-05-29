@@ -14,10 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      # The action reads rules, globs, and ignores from .markdownlint-cli2.yaml.
+      - uses: DavidAnson/markdownlint-cli2-action@v19
         with:
-          node-version: "20"
-      # Install then run cli2 directly; it reads globs and ignores from
-      # .markdownlint-cli2.yaml.
-      - run: npm install -g markdownlint-cli2
-      - run: markdownlint-cli2
+          globs: ""

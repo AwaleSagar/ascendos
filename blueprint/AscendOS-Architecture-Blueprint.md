@@ -7,6 +7,9 @@
 > **Design era:** 2026+ design conventions.
 > **Purpose:** Direct translation into a Figma master diagram and the canonical reference for kernel development.
 
+
+> **Validation status (2026-05):** This master spec has been validated against primary sources. Some figures here were corrected in the split `docs/architecture/` pages and `docs/validation/` records — where this file and those pages differ, the validation records carry the rationale. Key corrections: boot target (split), MTE (defense-in-depth, TIKTAG), IPC baseline (~986 cyc seL4 fastpath), 52-bit VA (needs FEAT_LPA2), QUIC (over UDP), storage (defer novel CoW).
+
 ---
 
 ## 0. Research Basis (Design Decisions Grounded in Modern Trends)
@@ -17,7 +20,7 @@
 | Formal verification momentum (seL4, Rust kernels) | Kernel written in a memory-safe systems language; verifiable TCB < 15 KLOC |
 | Async, completion-based I/O (io_uring) | Shared-memory ring queues for ALL syscalls; syscalls become the slow path |
 | EEVDF / capacity-aware scheduling | Latency-virtual-deadline scheduler, DynamIQ big.LITTLE aware |
-| ARMv9 confidential compute (CCA / Realms), MTE, PAC, BTI | First-class memory tagging, pointer auth, realm isolation |
+| ARMv9 confidential compute (CCA / Realms), MTE, PAC, BTI | Memory tagging as defense-in-depth (probabilistic; TIKTAG-affected), pointer auth, realm isolation (CCA — no shipping silicon yet, optional) |
 | Measured + secure boot (TPM/DICE, fTPM) | DICE-based layered attestation chain |
 | Driver isolation in user space (Fuchsia, microkernels) | All drivers are user-space capability-confined processes |
 | Declarative, immutable, atomic package systems (Nix, OSTree) | Content-addressed, atomic, rollback-capable packages |
@@ -144,7 +147,7 @@ flowchart LR
 | S7 svcd | EL0 | Dependency-ordered parallel service launch | — |
 | S8 ash | EL0 | Operator login / CLI | — |
 
-**Cold-boot target:** power-on → shell prompt in < 250 ms on reference SoC.
+**Boot targets (revised after validation — see docs/validation/):** kernel-init-to-shell (S5→S8) **< 250 ms** on a named reference SoC; full power-on (S0→S8) is platform/firmware-dominated, target **≤ 1 s** (firmware DRAM training + TF-A stages dominate). The original single "< 250 ms power-on" figure was unrealistic with firmware included. All figures are targets, not measurements.
 
 ---
 
@@ -180,7 +183,7 @@ flowchart TB
 - **Capability Engine:** All authority is an unforgeable capability stored in kernel-managed CSpace. Operations: `mint`, `derive`, `badge` (identity tagging), `revoke` (recursive). No ambient authority anywhere — mirrors seL4/Zircon.
 - **Scheduler:** Per-CPU runqueues, EEVDF-style virtual-deadline fairness, **capacity-aware placement** for DynamIQ big.LITTLE (E-cores vs P-cores), scheduling contexts (CPU budget is itself a capability → enables hard real-time + safe over-commit). Work-stealing across same-cluster cores.
 - **Memory Manager:** Single physical-memory model via **untyped → retype** (seL4 pattern): all kernel objects are user-allocated from untyped capabilities, so the kernel never has an internal heap → no in-kernel OOM, fully accountable memory. ARMv9 **MTE** tags enforced; **PAC/BTI** for control-flow integrity.
-- **Address-Space / ASID Manager:** Multi-level translation tables, ASID recycling, optional 52-bit VA, contiguous-hint (block) mappings for TLB efficiency.
+- **Address-Space / ASID Manager:** Multi-level translation tables, ASID recycling, optional 52-bit VA (requires FEAT_LPA2; baseline is 48-bit), contiguous-hint (block) mappings for TLB efficiency.
 - **IPC:** Synchronous fastpath endpoints (register-passed short messages) + asynchronous **notification words** (bitfield signals). Zero-copy bulk transfer via shared-frame capability grants.
 - **IRQ + Timer:** IRQs are capability objects delivered as notifications to user-space drivers; per-CPU generic timer; tickless idle.
 - **Fault Handler:** Page/permission faults are converted to IPC messages routed to the responsible **user-space pager** — kernel itself never does demand paging policy.
@@ -322,7 +325,7 @@ flowchart TB
     SECD3["secd"] -. firewall policy .-> NETD3
 ```
 
-- **IPv6-first**, dual-stack; QUIC-ready L4; pluggable congestion control.
+- **IPv6-first**, dual-stack; QUIC-capable (QUIC runs over UDP, RFC 9000 — not an L4 peer); pluggable congestion control.
 - **Zero-copy** RX/TX via shared frames between `netstackd` and NIC driver.
 - **Sockets are capabilities** — no global port namespace ambient authority; firewall = capability policy enforced via `secd`.
 - **Offload-aware:** checksum/segmentation offload negotiated through driver caps.

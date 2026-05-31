@@ -46,6 +46,20 @@ pre-1.0 and the design may change without notice.
   verifiability (clustered multikernel), missing early-boot entropy/RNG,
   multi-server IPC overhead, unaddressed side-channels, missing power
   management, verified-Rust caveat, and more.
+- Remediation plan (`docs/validation/2026-05-remediation-plan.md`) and applied
+  all nine fixes:
+  - **ADR-0005** — SMP as a clustered multikernel (supersedes the "optional
+    multikernel" framing; preserves verifiability).
+  - **ADR-0006** — first-class entropy/RNG subsystem (FEAT_RNG + persisted seed,
+    blocks until seeded, gates key use).
+  - **ADR-0007** — separate "memory safety" from "formal verification" as
+    assurance goals; informs the open language decision.
+  - Architecture pages updated: scheduling (SMP model, power-aware), security
+    (entropy, transient-execution/timing channels + real-time tension), IPC
+    (hot-path latency budget, NUMA/cache zero-copy), microkernel (square-law
+    verification cost, memory-safe ≠ verified), drivers (PSCI power management),
+    packaging (rollback via A/B + dm-verity, not FS snapshots).
+  - ROADMAP and glossary updated for consistency.
 
 Nothing is released yet. This section will be split into versioned entries once
 there is something to version.

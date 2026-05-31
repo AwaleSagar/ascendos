@@ -62,11 +62,15 @@ nav:
       - 0002 User-space drivers: adr/0002-userspace-drivers.md
       - 0003 Ring-based syscalls: adr/0003-ring-based-syscall-interface.md
       - 0004 No native kernel modules: adr/0004-no-native-kernel-modules.md
+      - 0005 SMP clustered multikernel: adr/0005-smp-clustered-multikernel.md
+      - 0006 Entropy / RNG subsystem: adr/0006-entropy-rng-subsystem.md
+      - 0007 Memory safety vs. verification: adr/0007-assurance-level-memory-safety-vs-verification.md
   - RFC process: rfcs/README.md
   - Validation:
       - 2026-05 external review: validation/2026-05-external-review.md
       - 2026-05 comprehensive pass: validation/2026-05-comprehensive-pass.md
       - 2026-05 critical review: validation/2026-05-critical-architecture-review.md
+      - 2026-05 remediation plan: validation/2026-05-remediation-plan.md
   - Diagrams: diagrams/README.md
   - Glossary: glossary.md
   - FAQ: faq.md

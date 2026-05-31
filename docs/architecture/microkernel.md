@@ -11,6 +11,20 @@ discipline, but the ring interface ([ADR-0003](../adr/0003-ring-based-syscall-in
 adds complexity that works against it. The kernel should be profiled by SLOC at
 each milestone to keep this honest.
 
+**Why every KLOC matters more than it looks.** Verification effort grows roughly
+with the *square* of code size (Heiser / microkerneldude). So code the ring
+interface adds to the TCB is super-linear proof cost, not linear — sharpening the
+[ADR-0003](../adr/0003-ring-based-syscall-interface.md) tension: if formal
+verification is a real goal, the ring may be unaffordable to prove, not merely
+harder.
+
+**"Memory-safe" is not "verified."** A memory-safe language (Rust) eliminates a
+bug *class*; it does not prove the kernel meets a spec, and the `unsafe` code
+kernels need (MMIO, page tables, the ring) sits outside the guarantee. The two
+assurance levels are kept distinct by
+[ADR-0007](../adr/0007-assurance-level-memory-safety-vs-verification.md); the
+language and assurance target are a Phase 1 decision.
+
 ```mermaid
 flowchart TB
     ENTRY["Trap & ring dispatch"] --> CAP["Capability engine"]

@@ -48,10 +48,47 @@ measurement on real ARM hardware before the decision is treated as settled.
 > not a target. (An earlier external review quoted "~1,830 cycles" for seL4 IPC;
 > we could not source that and do not use it.)
 
+## Hot-path latency budget (the microkernel tax)
+
+Routing everything through user-space servers means one logical operation can
+cross several protection domains, and each crossing is a context switch. This is
+the classic microkernel cost: Härtig et al. ("The Performance of µ-Kernel-Based
+Systems", SOSP 1997) showed system-call and context-switch overhead "counts
+heavily" once OS work is decomposed into user servers. Rings amortise this only
+when calls **batch**; a latency-bound single request still pays per hop.
+
+So we budget it explicitly:
+
+- **Count crossings on the hot paths.** A file read may go app → vfsd → blockd →
+  NVMe driver and back (~6–8 domain crossings); packet RX is similar. Even at
+  ~986-cycle fastpath IPC, a deep chain multiplies that.
+- **State a target** (to be set with measurement): worst-case crossings and
+  cycles for file-read and packet-RX, tracked as a regression metric once code
+  exists.
+- **Allow server fusion where justified.** Co-locating tightly-coupled servers
+  (e.g. vfsd+blockd in one address space initially) trades a little isolation for
+  fewer crossings — used only where measurement justifies it, never by default.
+- **Design rule:** minimise hot-path domain crossings; treat each one as a cost
+  to defend.
+
+## Zero-copy placement under SMP
+
+Shared-frame zero-copy is only cheap if the frame doesn't bounce between caches.
+Under the clustered-multikernel SMP model
+([ADR-0005](../adr/0005-smp-clustered-multikernel.md)) keep producer and consumer
+on the **same cluster** where possible, and choose the frame's shareability
+domain (Inner vs. Outer Shareable) deliberately — seL4's SMP work flags the
+"impact of replicated data on shared caches" (seL4 Summit 2023). Cross-cluster
+shared frames can erase the zero-copy win.
+
 ## Sources
 
 - seL4 fastpath optimisation: "Correct, Fast, Maintainable — Choose Any Three!"
   (Trustworthy Systems / UNSW).
+- Microkernel decomposition overhead: Härtig et al., "The Performance of
+  µ-Kernel-Based Systems" (SOSP 1997); L4Re Performance Overview.
+- SMP cache effects: seL4 Summit 2023, "Are efficient SMP VMs possible on
+  verifiable seL4?"
 - Round-trip cycle figures: "Fast, Secure, Adaptable: LionsOS…" (arXiv
   2501.06234).
 - seL4 whitepaper: IPC performance on ARM

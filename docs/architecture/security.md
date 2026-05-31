@@ -12,6 +12,7 @@ up in every band.
 | Isolation | Per-process address spaces, SMMU-scoped DMA, user-space drivers |
 | Confidential compute | ARMv9 CCA Realms via optional `realmd`/EL2 |
 | Policy & audit | `secd` as a central decision point + append-only audit log |
+| Randomness | Entropy/RNG subsystem; gates key generation ([ADR-0006](../adr/0006-entropy-rng-subsystem.md)) |
 | Safe extensibility | Verified bytecode sandbox; no native kernel modules ([ADR-0004](../adr/0004-no-native-kernel-modules.md)) |
 
 ## MTE is a mitigation, not a guarantee
@@ -61,6 +62,38 @@ Net: CCA stays as an architectural target, not a boot requirement. The design
 should not depend on RME features for any security property that matters on
 current hardware.
 
+## Entropy and randomness
+
+Originally absent, now a named subsystem
+([ADR-0006](../adr/0006-entropy-rng-subsystem.md)) — because a headless, CLI-only
+OS is the documented worst case for early-boot entropy starvation, and weak
+randomness silently breaks attestation nonces, key generation, badge
+randomization, and TLS.
+
+- **Mixed sources:** ARMv8.5 `FEAT_RNG` (`RNDR`) where present, DICE/boot-
+  measurement secrets, a persisted cross-boot seed, runtime jitter.
+- **Blocks until seeded:** a `getrandom`-style contract — no best-effort weak
+  bytes — with a "RNG ready" signal `svcd` uses to gate key-using services.
+- **Seed integrity:** the persisted seed is protected by dm-verity + `secd` and
+  regenerated after use.
+
+## Transient execution & timing side-channels
+
+Isolation (capabilities, SMMU, separate address spaces) does **not** by itself
+stop Spectre-class transient-execution leaks — Spectre is a class, "there is no
+single mitigation" (FAU EuroSec 2021). Two consequences AscendOS must own:
+
+- **Scope:** the threat model (below) must state which transient-execution
+  variants are in scope and plan for context-switch flushing and branch-predictor
+  controls on ARM (e.g. `CSDB`/barriers, predictor invalidation on domain
+  crossing).
+- **Real-time tension (important):** those mitigations cost cycles on every
+  domain crossing, which directly fights the hard-real-time goal pursued via MCS
+  scheduling contexts ("Spectre and Meltdown vs. Real-Time", Linux Foundation).
+  This is a genuine conflict between two design goals and is recorded as such, not
+  hidden. A microkernel's frequent crossings make both the exposure and the
+  mitigation cost larger than on a monolith.
+
 ## A note on threat model
 
 We don't yet have a written threat model, and we should. What's an attacker
@@ -76,5 +109,10 @@ place to contribute — see issue #2.
 - MTE modes and overhead — Arm Community blog, "Delivering enhanced security
   through MTE"; Android Open Source Project, "Arm memory tagging extension".
 - MTE hardware availability — Arm Learning Paths, "Enable MTE on Google Pixel 8".
+- Early-boot entropy — "Recommendations for Randomness in the OS" (HotOS/CMU);
+  Red Hat RNG guidance; ARM `FEAT_RNG`. See
+  [ADR-0006](../adr/0006-entropy-rng-subsystem.md).
+- Side-channels — meltdownattack.com; "The Price of Meltdown and Spectre" (FAU
+  EuroSec 2021); "Spectre and Meltdown vs. Real-Time" (Linux Foundation).
 
 Full detail: blueprint §11.

@@ -30,9 +30,14 @@ scrutiny, or whether we fall back to a more conventional trap-based design.
 
 Turn the blueprint into something defensible before committing to bring-up.
 
-- [ ] Choose implementation language and toolchain (leaning Rust; not decided)
+- [ ] Choose implementation language and toolchain (leaning Rust; not decided) —
+      decide the **assurance target** first ([ADR-0007](docs/adr/0007-assurance-level-memory-safety-vs-verification.md))
 - [ ] Paper-prototype the boot path (S0–S8) against a concrete reference SoC
 - [ ] Pin down the capability object set and IPC ABI in detail
+- [ ] Specify the **entropy/RNG** seeding + "RNG ready" gate
+      ([ADR-0006](docs/adr/0006-entropy-rng-subsystem.md))
+- [ ] Confirm the **clustered-multikernel** SMP model on paper
+      ([ADR-0005](docs/adr/0005-smp-clustered-multikernel.md))
 - [ ] Resolve open questions logged across the architecture pages
 
 **Exit criteria:** a frozen capability ABI draft and a chosen toolchain.
@@ -59,6 +64,8 @@ First time anything runs.
 - [ ] Root task hands off to `svcd`
 - [ ] A real UART driver in user space
 - [ ] An interactive serial console / shell stub
+- [ ] Entropy/RNG service seeded and gating key use (FEAT_RNG + persisted seed)
+- [ ] Basic power management via PSCI (CPU idle states)
 
 ---
 
@@ -66,7 +73,8 @@ First time anything runs.
 
 Storage, networking, and packaging — one at a time, each with its own RFC and
 exit criteria. Not planned in detail until Phase 3 teaches us what the service
-model really costs.
+model really costs. Also here: full power-management policy (DVFS/suspend),
+block-level A/B + dm-verity rollback, and the clustered-multikernel SMP bring-up.
 
 ---
 

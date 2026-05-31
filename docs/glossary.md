@@ -15,12 +15,21 @@ Terms used throughout the AscendOS docs.
   measurement, the basis of the attestation chain.
 - **CSpace** — the capability address space of a thread; the set of capabilities
   it holds.
+- **CSPRNG** — Cryptographically Secure Pseudo-Random Number Generator; the kind
+  the entropy subsystem exposes once seeded.
+- **Clustered multikernel** — an SMP model where each core/cluster runs its own
+  single-threaded kernel instance with replicated state, coordinating by message
+  passing rather than shared mutation. AscendOS's primary SMP model (ADR-0005).
 - **DICE** — Device Identifier Composition Engine; a layered boot-measurement
   scheme where each stage measures the next.
 - **EEVDF** — Earliest Eligible Virtual Deadline First; a scheduling algorithm
   offering fairness with explicit latency targets.
 - **EL0–EL3** — ARM64 Exception Levels (privilege levels). EL0 user, EL1 kernel,
   EL2 hypervisor, EL3 secure monitor.
+- **FEAT_RNG** — ARMv8.5 architectural feature providing `RNDR`/`RNDRRS`
+  hardware random-number instructions; a hardware entropy source where present.
+- **PSCI** — Power State Coordination Interface; the ARM-standard interface for
+  CPU idle, hotplug, and system suspend, used by the power-management component.
 - **MTE** — Memory Tagging Extension (ARMv9); tags memory and pointers to catch
   spatial/temporal safety violations.
 - **PAC / BTI** — Pointer Authentication / Branch Target Identification; ARM

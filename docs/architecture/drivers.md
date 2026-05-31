@@ -44,6 +44,26 @@ matters:
   driver's IRQ capability. The blueprint should assume GICv3 as the baseline
   (GICv2 is legacy and lacks ITS/LPI scaling).
 
+## Power management (PSCI)
+
+The driver/HAL layer was missing runtime power management — a real gap for an
+ARM64, minimal-footprint, embedded-leaning OS, where running cores flat-out is
+disqualifying. ARM standardises this via **PSCI** (Power State Coordination
+Interface), already used at EL3 for boot; AscendOS extends it to runtime:
+
+- **Mechanism (PSCI):** CPU idle states (`CPU_SUSPEND`), CPU hotplug
+  (`CPU_OFF`/`CPU_ON`), and system suspend / suspend-to-idle (S2Idle) are all
+  PSCI-mediated on ARMv8-A.
+- **Policy (user space):** idle-state selection and DVFS live in a user-space
+  power-policy service, consistent with the mechanism/policy split, and tie into
+  the capacity-aware scheduler (EAS-style energy awareness — see
+  [scheduling](scheduling.md)).
+- **Device side:** drivers expose suspend/resume entry points so `svcd`/power
+  policy can quiesce and restore devices around system suspend.
+
+Depth is a Phase 3/4 concern, but the component is named now so the scheduler,
+IRQ, and driver contracts can account for it rather than retrofit it.
+
 ## Open question
 
 - DeviceID/StreamID assignment and the SMMU/ITS configuration tables are
@@ -57,5 +77,7 @@ matters:
   SMMU does" / SMMU use cases; openEuler "Introduction to IOMMU and ARM SMMU".
 - GICv3/v4, LPIs, ITS, DeviceID — Arm Developer "GIC fundamentals" and "GICv3/v4
   LPIs"; OSDev GICv3/4.
+- Power management — ARM PSCI specification; Arm Developer "cpuidle (hotplug)";
+  TI AM62L S2Idle/PSCI integration; Linaro "Linux Kernel Power Management".
 
 Full detail: blueprint §10.

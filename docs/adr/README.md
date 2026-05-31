@@ -17,5 +17,8 @@ instead, a later ADR supersedes an earlier one, so the history survives.
 | [0002](0002-userspace-drivers.md) | Device drivers run in user space | Accepted |
 | [0003](0003-ring-based-syscall-interface.md) | Ring-based syscall interface | Accepted (contested) |
 | [0004](0004-no-native-kernel-modules.md) | No native loadable kernel modules | Accepted |
+| [0005](0005-smp-clustered-multikernel.md) | SMP as a clustered multikernel | Accepted |
+| [0006](0006-entropy-rng-subsystem.md) | First-class entropy / RNG subsystem | Accepted |
+| [0007](0007-assurance-level-memory-safety-vs-verification.md) | Memory safety vs. formal verification as distinct goals | Accepted |
 
 New decisions start from [`0000-template.md`](0000-template.md).

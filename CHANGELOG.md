@@ -41,6 +41,11 @@ pre-1.0 and the design may change without notice.
   StreamID and GICv3 / ITS / LPI as the driver-isolation hardware baseline.
 - Synced the master blueprint with the validated docs (boot split, MTE
   defense-in-depth, QUIC-over-UDP, 52-bit VA / FEAT_LPA2).
+- Critical architecture review (`docs/validation/2026-05-critical-architecture-review.md`):
+  nine evidence-backed findings prioritized by risk — SMP big-lock vs.
+  verifiability (clustered multikernel), missing early-boot entropy/RNG,
+  multi-server IPC overhead, unaddressed side-channels, missing power
+  management, verified-Rust caveat, and more.
 
 Nothing is released yet. This section will be split into versioned entries once
 there is something to version.
